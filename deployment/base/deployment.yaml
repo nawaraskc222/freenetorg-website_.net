@@ -1,0 +1,14 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: freenet-org
+  namespace: freenetorg
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: freenet-org
+  template:
+    metadata:
+      labels:
+        app: freenet-org

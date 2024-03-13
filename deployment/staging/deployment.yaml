@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: freenet-org
+  namespace: freenetorg
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: freenet-org-staging
+  template:
+    metadata:
+      labels:
+        app: freenet-org-staging
+    spec:
+      containers:
+        - name: freenet-org-app-staging
+          image: us-east1-docker.pkg.dev/freenet-353920/freenet-repo/freenet-org-staging
+          ports:
+            - containerPort: 8080
+          env:
+            - name: STRIPE_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: stripe-key
+                  key: STRIPE_SECRET_KEY
+            - name: GOOGLE_CLOUD_PROJECT_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: google-project-name
+                  key: google-project-name
+            - name: PIVOTAL_API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: pivotal-api-key
+                  key: pivotal-tracker-api-token
+            - name: GITHUB_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: github-token
+                  key: github-discussions-api-token
+
+      serviceAccountName: freenet-service-account
